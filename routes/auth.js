@@ -2,7 +2,7 @@
 const User= require("../modal/schema")
 const bcrypt =require("bcryptjs")
 
-const {validationuser} = require("../validation")
+const {validationuser,loginuser} = require("../validation")
 
 router.post("/register",async(req,res)=>{
 
@@ -26,5 +26,20 @@ router.post("/register",async(req,res)=>{
         res.status(400).send(err)
     }
 });
+
+router.post("/login",async(req,res)=>{
+
+      const {error} = loginuser(req.body)
+      if(error) return res.status(400).send(error.details[0].message)
+
+      const existemail = await User.findOne({email:req.body.email})
+      if(!existemail) return res.status(400).send("email not exist")
+
+       const passwxist = await bcrypt.compare(req.body.password,existemail.password)
+       if(!passwxist) return res.status(400).send("password doesn't match")
+
+       res.send("Logged in")
+     })
+
 
  module.exports = router;
