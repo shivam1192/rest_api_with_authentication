@@ -12,10 +12,11 @@ mongoose.connect(process.env.DB_CONNECT,{useNewUrlParser: true},()=>{
 
 // import module
 const authRoute = require("./routes/auth");
+const route = require("./routes/routes")
 app.use(express.json())
 // routes middleware
 app.use("/api/user",authRoute);
-
+app.use("/api/post",route)
 
 
 app.listen(3000,()=>{
